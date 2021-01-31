@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input class="form-control" type="text" id="pin">
+                    <button onclick="generatePin()" class="generate-btn">Generate Pin</button>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="type-digit" class="form-control" type="text">
+                    <div class="numbers">
+                        <div class="calc-body" id="digits-container">
+                            <div class="calc-button-row">
+                                <div class="button">7</div>
+                                <div class="button">8</div>
+                                <div class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">4</div>
+                                <div class="button">5</div>
+                                <div class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">1</div>
+                                <div class="button">2</div>
+                                <div class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">b</div>
+                                <div class="button">0</div>
+                                <div class="button">C</div>
+                            </div>
+                            <div>
+                                <button onclick="checkPin()" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left">3 try left</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="notify-section">
+                <p id="incurrect-pin" class="notify">❌ Pin Didn't Match, Please try again</p>
+                <p id="currect-pin" class="notify"> ✅ Pin Matched... Secret door is opening for you</p>
+                <p id="empty1" class="notify"> ❌ Please input value</p>
+            </div>
+        </div>
+        <script>
+            function getPin() {
+                const ramdom = Math.random() * 10000;
+                const pin = (ramdom + '').split('.')[0];
+                if (pin.length === 4) {
+                    return pin;
+                } else {
+                    return getPin();
+                }
+                const pinInput = document.getElementById('pin');
+                pinInput.value = getPin();
+            }
+            //setpin generate
+            function generatePin() {
+                const pinInput = document.getElementById('pin');
+                pinInput.value = getPin();
+            }
+
+            //handle calculator button event
+            const buttonContainer = document.getElementById('digits-container');
+            buttonContainer.addEventListener('click', function (event) {
+                const digit = event.target.innerText;
+                //this condition digit or number valid check
+                if (isNaN(digit)) {
+                    if (digit === 'C') {
+                        const typedigit = document.getElementById('type-digit');
+                        typedigit.value = "";
+                    }
+                } else {
+                    const typedigit = document.getElementById('type-digit');
+                    typedigit.value = typedigit.value + digit;
+                    console.log(typedigit.value);
+                }
+
+            });
+            function checkPin() {
+                const pin = document.getElementById('pin').value;
+                const typedPin = document.getElementById('type-digit').value;
+
+
+                let empty = '';
+                if (pin === empty) {
+                    const emptyfield = document.getElementById('empty1');
+                    emptyfield.style.display = "block";
+                    //empty for style
+                    const pinInput = document.getElementById('pin');
+                    pinInput.style.borderColor = "red";
+                    const typedigit = document.getElementById('type-digit');
+                    typedigit.style.borderColor = "red";
+
+
+
+                    const currect = document.getElementById('currect-pin');
+                    currect.style.display = "none";
+
+                    console.log(emptyfield);
+                } else {
+                    if (pin === typedPin) {
+                        incurrectCurrect('block', 'none');
+                        const emptyfield = document.getElementById('empty1');
+                        emptyfield.style.display = "none";
+                    } else if (pin !== typedPin) {
+                        incurrectCurrect('none', 'block');
+                        const emptyfield = document.getElementById('empty1');
+                        emptyfield.style.display = "none";
+                    }
+                }
+            }
+            //check message option
+            function incurrectCurrect(currectStatus, incurrectStatus) {
+                const correct = document.getElementById('currect-pin');
+                correct.style.display = currectStatus;
+                const incorrect = document.getElementById('incurrect-pin');
+                incorrect.style.display = incurrectStatus;
+            }
+        </script>
+</body>
+
+</html>
